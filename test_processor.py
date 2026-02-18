@@ -282,7 +282,9 @@ class TestInstaProcessor(unittest.TestCase):
             Instruction(InstructionType.ARITHMETIC, 'add', [3, 4]),
         ]
         results = self.processor.execute_program(program)
-        self.assertEqual(len(results), 1)  # Only first instruction before halt
+        self.assertEqual(len(results), 2)  # First instruction and halt result
+        self.assertEqual(results[0], 3)  # First add result
+        self.assertEqual(results[1], 'HALT')  # Halt result
         self.assertEqual(self.processor.state, ProcessorState.HALTED)
     
     def test_reset(self):

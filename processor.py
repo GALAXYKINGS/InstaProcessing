@@ -234,10 +234,12 @@ class Cache:
     def put(self, key: Any, value: Any):
         """Put a value into cache"""
         if len(self.cache) >= self.size:
-            # Evict least recently used
-            lru_key = min(self.access_count, key=self.access_count.get)
-            del self.cache[lru_key]
-            del self.access_count[lru_key]
+            # Evict least recently used - only from items currently in cache
+            cache_access = {k: v for k, v in self.access_count.items() if k in self.cache}
+            if cache_access:
+                lru_key = min(cache_access, key=cache_access.get)
+                del self.cache[lru_key]
+                del self.access_count[lru_key]
         
         self.cache[key] = value
         self.access_count[key] = 1
@@ -282,7 +284,7 @@ class InstaProcessor:
     def execute_instruction(self, instruction: Instruction) -> Any:
         """Execute a single instruction"""
         if self.state == ProcessorState.HALTED:
-            raise RuntimeError("Processor is halted")
+            raise RuntimeError("Processor is halted. Call reset() to restart execution.")
         
         self.state = ProcessorState.RUNNING
         self.instructions_executed += 1
@@ -308,10 +310,10 @@ class InstaProcessor:
         for instruction in instructions:
             try:
                 result = self.execute_instruction(instruction)
+                results.append(result)
                 if result == 'HALT':
                     self.state = ProcessorState.HALTED
                     break
-                results.append(result)
             except Exception as e:
                 results.append(f"Error: {e}")
         return results
