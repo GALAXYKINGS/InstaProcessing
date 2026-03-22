@@ -1,2 +1,3 @@
 # InstaProcessing
-a new type of cpu chip, a processor as you would say! with multiple different layers for different type for different types of sectors and sections for an abundance of different features!
+a new type of cpu chip, a processor as you would say! with multiple different layers for different types of different sections of sectors using multiple layers of usages...
+
